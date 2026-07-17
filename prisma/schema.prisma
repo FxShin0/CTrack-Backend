@@ -107,10 +107,14 @@ requiredSubject Subject @relation("RequiredBy", fields: [requiredSubjectId], ref
 }
 
 model AppUser {
-  id       Int     @id @default(autoincrement())
-  username String  @unique @db.VarChar(30)
-  name     String? @db.VarChar(30)
-  password String  @db.VarChar(255)
+  id         Int     @id @default(autoincrement())
+  username   String  @unique @db.VarChar(30)
+  email      String  @unique @db.VarChar(255)
+  name       String? @db.VarChar(30)
+  password   String  @db.VarChar(255)
+
+  verified   Boolean @default(false)
+  verifyCode String? @db.Char(6)
 
   subjects UserSubject[]
 
