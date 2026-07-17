@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model University {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(40)
+  alias   String? @unique @db.VarChar(10)
+
+  careers Career[]
+
+  @@map("university")
+}
+
+model Career {
+  id           Int    @id @default(autoincrement())
+  name         String @db.VarChar(40)
+
+  universityId Int        @map("university_id")
+  university   University @relation(fields: [universityId], references: [id])
+
+  subjects Subject[]
+
+  @@unique([universityId, name])
+
+  @@map("career")
+}
+
+model PeriodType {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(20)
+
+  subjects Subject[]
+
+  @@map("period_type")
+}
+
+model SubjectType {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(20)
+
+  subjects Subject[]
+
+  @@map("subject_type")
+}
+
+model SubjectCategory {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(20)
+
+  subjects Subject[]
+
+  @@map("subject_category")
+}
+
+model Subject {
+  id        Int    @id @default(autoincrement())
+  code      String @db.VarChar(20)
+  name      String @db.VarChar(40)
+
+  year        Int? @db.SmallInt
+  period      Int? @db.SmallInt
+  weeklyHours Int? @map("weekly_hours") @db.SmallInt
+
+  careerId          Int  @map("career_id")
+  subjectTypeId     Int  @map("subject_type_id")
+  subjectCategoryId Int  @map("subject_category_id")
+  periodTypeId      Int? @map("period_type_id") @db.SmallInt
+
+  career          Career          @relation(fields: [careerId], references: [id])
+  subjectType     SubjectType     @relation(fields: [subjectTypeId], references: [id])
+  subjectCategory SubjectCategory @relation(fields: [subjectCategoryId], references: [id])
+  periodType      PeriodType?     @relation(fields: [periodTypeId], references: [id])
+
+  prerequisites SubjectPrerequisite[] @relation("SubjectPrerequisites")
+  requiredBy    SubjectPrerequisite[] @relation("RequiredBy")
+
+  userSubjects UserSubject[]
+
+  @@unique([careerId, code])
+  @@unique([careerId, name])
+
+  @@map("subject")
+}
+
+model SubjectPrerequisite {
+  subjectId         Int @map("subject_id")
+  requiredSubjectId Int @map("required_subject_id")
+
+  subject Subject @relation("SubjectPrerequisites", fields: [subjectId], references: [id])
+
+requiredSubject Subject @relation("RequiredBy", fields: [requiredSubjectId], references: [id])
+  @@id([subjectId, requiredSubjectId])
+
+  @@map("subject_prerequisite")
+}
+
+model AppUser {
+  id       Int     @id @default(autoincrement())
+  username String  @unique @db.VarChar(30)
+  name     String? @db.VarChar(30)
+  password String  @db.VarChar(255)
+
+  subjects UserSubject[]
+
+  @@map("app_user")
+}
+
+model SubjectStatus {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(30)
+
+  userSubjects UserSubject[]
+
+  @@map("subject_status")
+}
+
+model UserSubject {
+  userId    Int @map("user_id")
+  subjectId Int @map("subject_id")
+  statusId  Int @map("status_id")
+
+  approvedDate    DateTime? @map("approved_date") @db.Date
+  regularizedDate DateTime? @map("regularized_date") @db.Date
+
+  attempts Int @default(0) @db.SmallInt
+
+  user    AppUser       @relation(fields: [userId], references: [id])
+  subject Subject       @relation(fields: [subjectId], references: [id])
+  status  SubjectStatus @relation(fields: [statusId], references: [id])
+
+  @@id([userId, subjectId])
+
+  @@map("user_subject")
+}
