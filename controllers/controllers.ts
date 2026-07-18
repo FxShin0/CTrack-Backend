@@ -1,7 +1,4 @@
-import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { prisma } from "..";
-import { ERRORS } from "../errors/errorCodes";
 import { authService } from "../services/auth.service";
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -11,5 +8,20 @@ export const registerUser = async (req: Request, res: Response) => {
   res.status(201).json({
     success: true,
     data: user,
+  });
+};
+
+export const registerLogin = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  const refreshToken = await authService.login({ username, password });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "PRODUCTION", //for testing in localhost it disables security
+    sameSite: "strict",
+    maxAge: 1000 * 60 * 60 * 8, //8hr just like the refreshToken
+  });
+  res.json({
+    success: true,
   });
 };
