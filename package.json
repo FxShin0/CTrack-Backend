@@ -18,7 +18,11 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "concurrently \"tsc --watch\" \"nodemon --watch dist dist/index.js\"",
-    "build": "tsc"
+    "build": "tsc",
+    "seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +33,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.1.1",
     "concurrently": "^10.0.3",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "tsx": "^4.23.1"
   }
 }

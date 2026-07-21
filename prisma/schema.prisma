@@ -67,7 +67,7 @@ model SubjectCategory {
 model Subject {
   id        Int    @id @default(autoincrement())
   code      String @db.VarChar(20)
-  name      String @db.VarChar(40)
+  name      String @db.VarChar(150)
 
   year        Int? @db.SmallInt
   period      Int? @db.SmallInt

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { authService } from "../services/auth.service";
+import { universityService } from "../services/university.service";
 
 export const registerUser = async (req: Request, res: Response) => {
   const { username, name, email, password } = req.body;
@@ -23,5 +24,13 @@ export const registerLogin = async (req: Request, res: Response) => {
   });
   res.json({
     success: true,
+  });
+};
+
+export const getUniversities = async (req: Request, res: Response) => {
+  const universities = await universityService.getUniversities();
+  res.json({
+    success: true,
+    universities,
   });
 };

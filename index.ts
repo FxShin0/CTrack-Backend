@@ -1,7 +1,11 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
-import { registerLogin, registerUser } from "./controllers/controllers";
+import {
+  getUniversities,
+  registerLogin,
+  registerUser,
+} from "./controllers/controllers";
 import { registerValidator } from "./validators/auth/register.validator";
 import { errorHandler } from "./middlewares/error-handler.middleware";
 import { loginValidator } from "./validators/auth/login.validator";
@@ -21,6 +25,8 @@ app.listen(PORT, () => {
 //endpoints
 app.post("/register", registerValidator, registerUser);
 app.post("/login", loginValidator, registerLogin);
+
+app.get("/universities", getUniversities);
 
 //global middlewares
 app.use(errorHandler);

@@ -1,0 +1,13 @@
+export const SUBJECT_STATUSES = {
+  APROBADO: "Aprobado",
+  PROMOCIONADO: "Promocionado",
+  PENDIENTE_FINAL: "Pendiente Final",
+  NO_CURSADO: "No cursado",
+};
+
+export const subjectStatuses = [
+  SUBJECT_STATUSES.APROBADO,
+  SUBJECT_STATUSES.PROMOCIONADO,
+  SUBJECT_STATUSES.PENDIENTE_FINAL,
+  SUBJECT_STATUSES.NO_CURSADO,
+];

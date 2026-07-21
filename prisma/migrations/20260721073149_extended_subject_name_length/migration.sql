@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "subject" ALTER COLUMN "name" SET DATA TYPE VARCHAR(150);
