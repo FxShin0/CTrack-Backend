@@ -1,10 +1,14 @@
+export interface ApiError {
+  code: string;
+  message: string;
+}
+
 export class AppError extends Error {
   constructor(
     public status: number,
-    public code: string,
-    message: string,
+    public errors: ApiError[],
   ) {
-    super(message);
+    super(errors[0]?.message ?? "Unknown error");
     this.name = "AppError";
 
     Object.setPrototypeOf(this, AppError.prototype);

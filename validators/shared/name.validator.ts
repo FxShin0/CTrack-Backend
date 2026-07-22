@@ -1,9 +1,10 @@
 import { body } from "express-validator";
+import { ERRORS } from "../../errors/errorCodes";
 
 export const nameValidator = body("name")
   .trim()
   .notEmpty()
-  .withMessage("Name field cannot be empty")
+  .withMessage(ERRORS.NAME_EMPTY)
   .bail()
   .matches(/^[\p{L}]+(?:['-][\p{L}]+)*(?: [\p{L}]+(?:['-][\p{L}]+)*)*$/u)
-  .withMessage("Name field does not have a valid format");
+  .withMessage(ERRORS.NAME_NOT_VALID);

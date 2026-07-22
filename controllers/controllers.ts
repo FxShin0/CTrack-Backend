@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { authService } from "../services/auth.service";
 import { universityService } from "../services/university.service";
+import { careerService } from "../services/career.service";
 
 export const registerUser = async (req: Request, res: Response) => {
   const { username, name, email, password } = req.body;
@@ -32,5 +33,16 @@ export const getUniversities = async (req: Request, res: Response) => {
   res.json({
     success: true,
     universities,
+  });
+};
+
+export const getCareersFromUniversity = async (req: Request, res: Response) => {
+  const alias = req.params.alias as string;
+  const careers = await careerService.getCareersByUniversityAlias({
+    alias,
+  });
+  res.json({
+    success: true,
+    careers,
   });
 };

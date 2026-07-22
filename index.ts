@@ -2,6 +2,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 import {
+  getCareersFromUniversity,
   getUniversities,
   registerLogin,
   registerUser,
@@ -10,6 +11,8 @@ import { registerValidator } from "./validators/auth/register.validator";
 import { errorHandler } from "./middlewares/error-handler.middleware";
 import { loginValidator } from "./validators/auth/login.validator";
 import cookieParser from "cookie-parser";
+import { universityAliasValidator } from "./validators/university/universityAlias.validator";
+import { careerIdValidator } from "./validators/career/careerId.validator";
 
 dotenv.config();
 export const prisma = new PrismaClient();
@@ -27,6 +30,12 @@ app.post("/register", registerValidator, registerUser);
 app.post("/login", loginValidator, registerLogin);
 
 app.get("/universities", getUniversities);
+app.get(
+  "/universities/:alias/careers",
+  universityAliasValidator,
+  getCareersFromUniversity,
+);
+app.get("/careers/:careerId/subjects", careerIdValidator);
 
 //global middlewares
 app.use(errorHandler);

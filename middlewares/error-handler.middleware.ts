@@ -10,8 +10,7 @@ export function errorHandler(
   if (err instanceof AppError) {
     return res.status(err.status).json({
       success: false,
-      error: err.code,
-      message: err.message,
+      errors: err.errors,
     });
   }
 
@@ -19,7 +18,11 @@ export function errorHandler(
 
   return res.status(500).json({
     success: false,
-    error: "INTERNAL_SERVER_ERROR",
-    message: "An unexpected error occurred.",
+    errors: [
+      {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Ha ocurrido un error inesperado del servidor.",
+      },
+    ],
   });
 }

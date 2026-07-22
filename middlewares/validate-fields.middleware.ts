@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
+import { mapValidationError } from "../errors/mapValidationError";
 
 export function validateFields(
   req: Request,
@@ -10,7 +11,8 @@ export function validateFields(
 
   if (!errors.isEmpty()) {
     return res.status(400).json({
-      errors: errors.array(),
+      success: false,
+      errors: errors.array().map(mapValidationError),
     });
   }
 
