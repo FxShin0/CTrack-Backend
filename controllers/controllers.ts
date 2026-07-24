@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { authService } from "../services/auth.service";
 import { universityService } from "../services/university.service";
 import { careerService } from "../services/career.service";
+import { subjectService } from "../services/subject.service";
+import { trackerService } from "../services/tracker.service";
 
 export const registerUser = async (req: Request, res: Response) => {
   const { username, name, email, password } = req.body;
@@ -44,5 +46,35 @@ export const getCareersFromUniversity = async (req: Request, res: Response) => {
   res.json({
     success: true,
     careers,
+  });
+};
+
+export const getSubjectsFromCareer = async (req: Request, res: Response) => {
+  const id = Number.parseInt(req.params.id as string);
+
+  const data = await subjectService.getSubjectsFromCareer({ id });
+
+  res.json({
+    success: true,
+    data,
+  });
+};
+
+export const setUserSubjectStatus = async (req: Request, res: Response) => {
+  const { id } = req.user;
+  const { status } = req.body;
+  const subjectId = Number.parseInt(req.params.id as string);
+
+  const updatedStatus = await trackerService.setUserSubjectStatus({
+    userId: id,
+    subjectId,
+    status,
+  });
+
+  res.json({
+    success: true,
+    data: {
+      status: updatedStatus,
+    },
   });
 };

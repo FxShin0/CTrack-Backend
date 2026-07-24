@@ -5,6 +5,7 @@ import { RegisterDto } from "../dtos/auth/register.dto";
 import { AppError } from "../errors/AppError";
 import { LoginDto } from "../dtos/auth/login.dto";
 import jwt from "jsonwebtoken";
+import { JwtPayload } from "../middlewares/validate-jwt.middleware";
 
 const register = async (dto: RegisterDto) => {
   const { username, name, email, password } = dto;
@@ -54,11 +55,14 @@ const login = async (dto: LoginDto) => {
 
   if (!isCorrectPassword) throw new AppError(401, [ERRORS.INCORRECT_PASSWORD]);
 
-  const signedToken = jwt.sign(
-    { username: user.username, id: user.id, role: user.role },
-    process.env.SECRET as string,
-    { expiresIn: "8h" },
-  );
+  const payload: JwtPayload = {
+    username: user.username,
+    id: user.id,
+    role: user.role,
+  };
+  const signedToken = jwt.sign(payload, process.env.SECRET as string, {
+    expiresIn: "8h",
+  });
 
   return signedToken;
 };

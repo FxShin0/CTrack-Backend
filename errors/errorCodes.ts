@@ -1,9 +1,14 @@
+import { STATUS_CODES } from "node:http";
 import {
   MAX_PASSWORD_LENGTH,
   MAX_USER_CHAR,
   MIN_PASSWORD_LENGTH,
   MIN_USER_CHAR,
 } from "../config/auth/auth";
+import {
+  SUBJECT_STATUSES,
+  subjectStatuses,
+} from "../prisma/data/subjectStatuses";
 
 export const ERRORS = {
   USERNAME_ALREADY_EXISTS: {
@@ -75,6 +80,10 @@ export const ERRORS = {
     code: "CAREER_ID_IS_NOT_INTEGER",
     message: "careerId has to be an integer number",
   },
+  CAREER_ID_NOT_FOUND: {
+    code: "CAREER_ID_NOT_FOUND",
+    message: "The indicated careerId is non existant",
+  },
   UNIVERSITY_ALIAS_EMPTY: {
     code: "UNIVERSITY_ALIAS_EMPTY",
     message: "University alias has to be sent as a param, it cannot be empty",
@@ -83,5 +92,41 @@ export const ERRORS = {
     code: "UNIVERSITY_ALIAS_IS_NOT_UPPERCASE_LETTERS",
     message:
       "University Alias can only be uppercase letters from A-Z. IE: 'UNLAM'.",
+  },
+  SUBJECT_ID_EMPTY: {
+    code: "SUBJECT_ID_EMPTY",
+    message: "Subject id has to be sent as a param, it cannot be empty",
+  },
+  SUBJECT_ID_NOT_FOUND: {
+    code: "SUBJECT_ID_NOT_FOUND",
+    message: "The indicated subject id is non existant",
+  },
+  SUBJECT_ID_NOT_VALID: {
+    code: "SUBJECT_ID_NOT_VALID",
+    message: "Subject id has to be an integer number",
+  },
+  TOKEN_EMPTY: {
+    code: "TOKEN_EMPTY",
+    message: "Token is required and should be sent to verify user.",
+  },
+  TOKEN_NOT_VALID: {
+    code: "TOKEN_NOT_VALID",
+    message: "Token is invalid",
+  },
+  SUBJECT_STATUS_EMPTY: {
+    code: "STATUS_EMPTY",
+    message: "Status field cannot be empty",
+  },
+  SUBJECT_STATUS_NOT_VALID: {
+    code: "STATUS_NOT_VALID",
+    message: `Status can only be one of the following: ${subjectStatuses
+      .map((s) => {
+        return `'${s}'`;
+      })
+      .join("-")}`,
+  },
+  SUBJECT_STATUS_NOT_FOUND: {
+    code: "SUBJECT_STATUS_NOT_FOUND",
+    message: "The indicated subject status doesn't exist",
   },
 };

@@ -3,9 +3,11 @@ import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 import {
   getCareersFromUniversity,
+  getSubjectsFromCareer,
   getUniversities,
   registerLogin,
   registerUser,
+  setUserSubjectStatus,
 } from "./controllers/controllers";
 import { registerValidator } from "./validators/auth/register.validator";
 import { errorHandler } from "./middlewares/error-handler.middleware";
@@ -13,6 +15,9 @@ import { loginValidator } from "./validators/auth/login.validator";
 import cookieParser from "cookie-parser";
 import { universityAliasValidator } from "./validators/university/universityAlias.validator";
 import { careerIdValidator } from "./validators/career/careerId.validator";
+import { subjectIdValidator } from "./validators/subject/subjectId.validator";
+import { validateJwt } from "./middlewares/validate-jwt.middleware";
+import { setUserSubjectStatusValidator } from "./validators/tracker/setUserSubjectStatus.validator";
 
 dotenv.config();
 export const prisma = new PrismaClient();
@@ -35,7 +40,14 @@ app.get(
   universityAliasValidator,
   getCareersFromUniversity,
 );
-app.get("/careers/:careerId/subjects", careerIdValidator);
+app.get("/careers/:id/subjects", careerIdValidator, getSubjectsFromCareer);
+
+app.put(
+  "/users/me/subjects/:id",
+  setUserSubjectStatusValidator,
+  validateJwt,
+  setUserSubjectStatus,
+);
 
 //global middlewares
 app.use(errorHandler);
